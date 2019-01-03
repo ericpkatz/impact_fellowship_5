@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Films from './Films';
+import People from './People';
 
 const Title = ({ title })=> <h1>{ title }</h1>;
 
@@ -9,32 +9,42 @@ export default class App extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      films : [],
+      people : [],
+      favorites: {}
     }; 
   }
+  setFavorite = (person)=> {
+    const favorites = Object.assign({}, this.state.favorites, {
+      [ person.name ] : !this.state.favorites[person.name]
+    }); 
+    this.setState({ favorites });
+
+  }
   componentDidMount(){
-    const data = localStorage.getItem('films');
+    const data = localStorage.getItem('people');
     if(data){
-      this.setState({ films: JSON.parse(data)});
+      this.setState({ people: JSON.parse(data)});
       return;
     }
-    window.fetch('https://swapi.co/api/films')
+    window.fetch('https://swapi.co/api/people')
       .then( response => response.json())
       .then( data => {
-        const films = data.results;
-        localStorage.setItem('films', JSON.stringify(films));
-        this.setState({ films })
+        const people = data.results;
+        localStorage.setItem('people', JSON.stringify(people));
+        this.setState({ people })
       });
 
   }
   render(){
     const { title } = this.props;
-    const { films } = this.state;
+    const { people, favorites } = this.state;
+    const { setFavorite } = this;
+    console.log(favorites);
     return ( 
       <div>
         <Title title={ title }/>
         {
-          !films.length ? <span>Loading</span> : <Films films={ films } />
+          !people.length ? <span>Loading</span> : <People people={ people } favorites={ favorites } setFavorite={ setFavorite }/>
         }
       </div>
     );

@@ -4,5 +4,5 @@ import faker from 'faker';
 import App from './App';
 
 const root = document.getElementById('root');
-ReactDOM.render(<App title='Star Wars Movies'/>, root);
+ReactDOM.render(<App title='Star Wars People'/>, root);
 
